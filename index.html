@@ -2,9 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Hello</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PingPong Game</title>
+    <style>
+        body {
+            background-color: black ;
+            color: whitesmoke;
+            font-family: sans-serif;
+            text-align: center;
+        }
+        canvas {
+            border: 1px solid whitesmoke;
+            background: black;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js">
+    </script>
 </head>
 <body>
-
+    <h3 id="score">Điểm: 0</h3>
+    <canvas id="game" width="480" height="400"></canvas>
 </body>
 </html>
