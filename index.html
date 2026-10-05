@@ -13,7 +13,7 @@
         }
         canvas {
             border: 1px solid whitesmoke;
-            background: black;
+            background: pink;
         }
     </style>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js">
@@ -21,6 +21,77 @@
 </head>
 <body>
     <h3 id="score">Điểm: 0</h3>
-    <canvas id="game" width="480" height="400"></canvas>
+    <canvas id="game" width="500" height="400"></canvas>
+    <script>
+        $(document).ready(function (){
+            const  ctx = $('game')[0].getContext('2d')
+            const brickImg = new Image();
+            brickImg.src = './img/brick.png';
+            let paddle, ball, bricks,score, state;
+            let left = false, right = false;
+            //thanh cản
+            const obstacles = [{x:90, y: 200, w:70, h:12}, {x:300, y: 200, w:70, h:12}];
+            function  resetGame() {
+                score = 0;
+                state = 'ready';
+                paddle = {x: 200, y: 400, w: 80, h: 10};
+                ball = {x: 250, y: 350, dx: 0, dy: 0, r: 7};
+                bricks = [];
+                for (let row = 0; row < 4; row++) {
+                    for (let col = 0; col < 7; col++) {
+                        bricks.push({x: col * 60 + 40, y: row * 25 + 40, w: 50, h: 15});
+                    }
+                }
+                $('#score').text('Score:0');
+            }
+            function hit(r){
+                return ball.x > r.x && ball.x < r.x +r.w && ball.y >r.y && ball.y< r.y +r.h;
+            }
+            /* code dưới này l khi chạm bóng vo bán kính sẽ tính luôn còn  trên thì chạm vào một chút mới tính
+                nếu code dưới thì cân nhắc các phần khác nữa
+            function hit(r) {
+    return ball.x + ball.r > r.x && ball.x - ball.r < r.x + r.w &&
+           ball.y + ball.r > r.y && ball.y - ball.r < r.y + r.h;
+}*/
+            $(document ).on('keydown',function(e){
+                if (e.key == 'ArrowLeft') left = true;
+                if (e.key == 'ArrowRight') right = true;
+                if (e.key == ' ') {
+                    if(state =='ready'){
+                        state = 'play';
+                        ball.dx = 0;
+                        ball.dy = -4;
+                    }
+                    else if (state != 'play'){
+                        resetGame();
+                    }
+                }
+                if(e.key.startsWith('Arrow') || e.key == ' ')e.preventDefault();
+            });
+            $(document).on('keyup',function (e){
+                if (e.key == 'ArrowLeft') left = true;
+                if (e.key == 'ArrowRight') right = true;
+            });
+            function update(){
+                if (state == 'win' || state == 'lose') return;
+                // thanh đỡ
+                if(left && paddle.x >0 ) paddle.x -= 6;
+                if (right && paddle.x + paddle.w <500) paddle.x += 6;
+                // bóng theo thanh đỡ đợi bắn
+                if(state == 'ready'){
+                    ball.x = paddle.x + paddle.w /2;
+                    return;
+                }
+                ball.x += ball.dx;
+                ball.y += ball.dy;
+                // nảy tường
+                if (ball.x <ball.r) ball.dx = Math.abs(ball.dx);
+                if (ball.x > 500 - ball.r) ball.dx = -Math.abs(ball.dx);
+                if (ball.y < ball.r) ball.dy = Math.abs(ball.dy);
+                // chạm thanh đỡ chia 2 bên right left
+
+            }
+        })
+    </script>
 </body>
 </html>
